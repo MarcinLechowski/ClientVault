@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nowy Klient</title>
+    <link rel="stylesheet" th:href="@{styles.css}" />
+    <style>
+
+        body {
+            background-color: #1c1c1c;
+            color: #d3c7ba;
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #e2ded0;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2e2e2e;
+            border: 2px solid #4a4a4a;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px #000;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #e2ded0;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #3a3a3a;
+            border: 1px solid #4a4a4a;
+            border-radius: 5px;
+            color: #d3c7ba;
+            font-family: 'Georgia', serif;
+            font-size: 1em;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #5a5a5a;
+            background-color: #2a2a2a;
+            outline: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            width: 48%;
+            padding: 15px;
+            background-color: #4a4a4a;
+            color: #e2ded0;
+            font-size: 1.2em;
+            font-family: 'Georgia', serif;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0px 5px 10px #000;
+        }
+
+        button:hover {
+            background-color: #5a5a5a;
+        }
+
+        button:active {
+            background-color: #3a3a3a;
+            box-shadow: 0px 2px 5px #000;
+        }
+
+        a.button {
+            width: 48%;
+            text-align: center;
+            padding: 15px;
+            background-color: #4a4a4a;
+            color: #e2ded0;
+            font-size: 1.2em;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 0px 5px 10px #000;
+        }
+
+        a.button:hover {
+            background-color: #5a5a5a;
+        }
+
+        a.button:active {
+            background-color: #3a3a3a;
+            box-shadow: 0px 2px 5px #000;
+        }
+    </style>
+</head>
+<body>
+<h1>Nowy Klient</h1>
+<form th:action="@{/new}" th:object="${client}" method="post">
+
+    <label for="name">Nazwa:</label>
+    <input type="text" id="name" th:field="*{name}" required/>
+
+    <label for="country">Kraj:</label>
+    <input type="text" id="country" th:field="*{country}" required/>
+
+    <label for="goodsHeBuy">Kupuje:</label>
+    <input type="text" id="goodsHeBuy" th:field="*{goodsHeBuy}" required/>
+
+    <label for="goodsHeSell">Sprzedaje:</label>
+    <input type="text" id="goodsHeSell" th:field="*{goodsHeSell}" required/>
+
+    <label for="creditLimit">Limit Kredytowy:</label>
+    <input type="number" id="creditLimit" th:field="*{creditLimit}" required/>
+
+    <label for="acceptedPrice">Ceny Akceptowalne:</label>
+    <input type="number" id="acceptedPrice" th:field="*{acceptedPrice}" required/>
+
+    <label for="offeredPrice">Ceny Oferowane:</label>
+    <input type="number" id="offeredPrice" th:field="*{offeredPrice}" required/>
+
+    <label for="contact">Kontakt:</label>
+    <input type="text" id="contact" th:field="*{contact}" required/>
+
+    <label for="info">Info:</label>
+    <input type="text" id="info" th:field="*{info}" />
+
+    <div class="button-container">
+        <button type="submit">Zapisz</button>
+        <a href="/clients" class="button">Powrót</a>
+    </div>
+
+</form>
+
+</body>
+</html>

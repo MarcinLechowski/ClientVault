@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kalendarz i Lista Klientów</title>
+    <link rel="stylesheet" th:href="@{styles.css}" />
+    <style>
+        body {
+            background-color: #2e2e2e;
+            color: #e0e0e0;
+            font-family: 'Garamond', serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #b3b3b3;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .clock-calendar {
+            background-color: #444;
+            color: #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            width: 30%; /* Zmniejszona szerokość o połowę */
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .clock {
+            font-size: 1.5em; /* Zmniejszony rozmiar czcionki */
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar div {
+            padding: 8px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.9em; /* Zmniejszony rozmiar czcionki */
+            cursor: pointer;
+        }
+
+        .calendar .header {
+            grid-column: span 7;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .calendar .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            grid-column: span 7;
+        }
+
+        .calendar .navigation button {
+            background-color: #555;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .calendar .navigation button:hover {
+            background-color: #666;
+        }
+
+        .calendar .day-name {
+            font-weight: bold;
+            background-color: #555;
+            color: #e0e0e0;
+        }
+
+        .calendar .current-day {
+            background-color: #00aaff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .calendar .day {
+            background-color: #666;
+            color: #fff;
+        }
+
+        .calendar .holiday {
+            background-color: #ff4444;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .calendar .has-info {
+            text-decoration: underline;
+            background-color: #44aaff;
+        }
+
+        .info-form {
+            display: none;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 30%;
+            height: fit-content;
+        }
+
+        .info-form textarea, .info-form button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 5px;
+        }
+
+        .info-form textarea {
+            width: 90%;
+        }
+
+        .client-list {
+            width: 100%; /* Pełna szerokość strony */
+            padding: 20px;
+            background-color: #3b3b3b;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 1.1em;
+            border: 1px solid #555;
+        }
+
+        th {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        td {
+            color: #d4d4d4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        td a {
+            color: #c5a31a;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #4a4a4a;
+            color: #e0e0e0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0 auto;
+            box-shadow: 0px 5px 10px #000;
+        }
+
+        button:hover {
+            background-color: #5a5a5a;
+        }
+
+        button:active {
+            background-color: #3a3a3a;
+            box-shadow: 0px 2px 5px #000;
+        }
+    </style>
+</head>
+<body>
+<h1>Lista Klientów</h1>
+
+<div class="container">
+    <div class="clock-calendar">
+        <div class="clock" id="clock"></div>
+        <div class="calendar" id="calendar"></div>
+    </div>
+
+    <div class="info-form" id="infoForm">
+        <h3>Dodaj informacje do dnia <span id="selectedDay"></span></h3>
+        <textarea id="eventInfo" rows="4" placeholder="Wpisz informacje..."></textarea>
+        <br>
+        <button onclick="saveEvent()">Zapisz</button>
+        <button onclick="closeForm()">Anuluj</button>
+    </div>
+</div>
+
+<div class="client-list">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Kraj</th>
+            <th>Kontakt</th>
+            <th>Kupuje</th>
+            <th>Sprzedaje</th>
+            <th>Info</th>
+        </tr>
+        <tr th:each="client : ${clients}">
+            <td th:text="${client.id}">ID</td>
+            <td><a th:href="@{/clients/{id}(id=${client.id})}" th:text="${client.name}">Nazwa</a></td>
+            <td th:text="${client.country}">Kraj</td>
+            <td th:text="${client.contact}">Kontakt</td>
+            <td th:text="${client.goodsHeBuy}">Kupuje</td>
+            <td th:text="${client.goodsHeSell}">Sprzedaje</td>
+            <td th:text="${client.info}">Info</td>
+        </tr>
+    </table>
+</div>
+
+<button onclick="location.href='/new'">Dodaj nowego klienta</button>
+
+<script>
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let events = {};
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString();
+    }
+
+    function updateCalendar(month = currentMonth, year = currentYear) {
+        const now = new Date();
+        const today = now.getDate();
+        const thisMonth = now.getMonth();
+        const thisYear = now.getFullYear();
+
+        const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysOfWeek = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Niedz'];
+
+        let calendarHTML = `<div class='header'>${monthNames[month]} ${year}</div>`;
+        calendarHTML += `<div class='navigation'>
+            <button onclick='navigateMonth(-1)'>&laquo; Poprzedni</button>
+            <button onclick='navigateMonth(1)'>Następny &raquo;</button>
+        </div>`;
+
+        daysOfWeek.forEach(day => {
+            calendarHTML += `<div class='day-name'>${day}</div>`;
+        });
+
+        const startOffset = (firstDayOfMonth + 6) % 7;
+        for (let i = 0; i < startOffset; i++) {
+            calendarHTML += `<div class='day'></div>`;
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateKey = `${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const isToday = day === today && month === thisMonth && year === thisYear;
+            const hasInfo = events[dateKey];
+            calendarHTML += `<div class='day ${isToday ? 'current-day' : ''} ${hasInfo ? 'has-info' : ''}' onclick='openForm(${day})'>${day}</div>`;
+        }
+
+        document.getElementById('calendar').innerHTML = calendarHTML;
+    }
+
+    function openForm(day) {
+        const dateKey = `${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        document.getElementById('selectedDay').textContent = `${day}.${currentMonth + 1}.${currentYear}`;
+        document.getElementById('eventInfo').value = events[dateKey] || '';
+        document.getElementById('infoForm').style.display = 'block';
+    }
+
+    function closeForm() {
+        document.getElementById('infoForm').style.display = 'none';
+        document.getElementById('eventInfo').value = '';
+        document.getElementById('selectedDay').textContent = '';
+    }
+
+    function saveEvent() {
+        const eventInfo = document.getElementById('eventInfo').value.trim();
+        const selectedDay = document.getElementById('selectedDay').textContent;
+        const [day, month, year] = selectedDay.split('.');
+        const dateKey = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        if (eventInfo) {
+            events[dateKey] = eventInfo;
+            alert(`Zapisano informacje: ${eventInfo}`);
+        } else {
+            delete events[dateKey];
+            alert('Wpis został usunięty');
+        }
+
+        updateCalendar(currentMonth, currentYear);
+        closeForm();
+    }
+
+    function navigateMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear -= 1;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear += 1;
+        }
+        updateCalendar(currentMonth, currentYear);
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    updateCalendar();
+</script>
+</body>
+</html>

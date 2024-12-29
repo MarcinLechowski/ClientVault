@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Szczegóły Klienta</title>
+  <link rel="stylesheet" th:href="@{styles.css}" />
+  <style>
+    body {
+      background-color: #2e2e2e;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: #d4af37;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      max-width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    table, th, td {
+      border: 1px solid #555;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      word-wrap: break-word;
+    }
+
+    th {
+      background-color: #444;
+    }
+
+    .info-cell {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background-color: #444;
+      color: #e0e0e0;
+    }
+
+    textarea {
+      height: 200px;
+      resize: vertical;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    a.button {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    a.button:hover {
+      background-color: #45a049;
+    }
+
+
+    button, input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover, input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .form-container {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      background-color: #2e2e2e;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+<h1>Szczegóły Klienta</h1>
+
+<<form id="update-form" th:action="@{/clients/update}" method="post">
+  <table>
+    <tr>
+      <th>Id</th>
+      <td><input type="text" name="id" th:value="${client.id}" readonly /></td>
+    </tr>
+    <tr>
+      <th>Nazwa</th>
+      <td><input type="text" name="name" th:value="${client.name}" required /></td>
+    </tr>
+    <tr>
+      <th>Kraj</th>
+      <td><input type="text" name="country" th:value="${client.country}" /></td>
+    </tr>
+    <tr>
+      <th>Kupuje</th>
+      <td><input type="text" name="goodsHeBuy" th:value="${client.goodsHeBuy}" /></td>
+    </tr>
+    <tr>
+      <th>Sprzedaje</th>
+      <td><input type="text" name="goodsHeSell" th:value="${client.goodsHeSell}" /></td>
+    </tr>
+    <tr>
+      <th>Limit Kredytowy</th>
+      <td><input type="number" step="0.01" name="creditLimit" th:value="${client.creditLimit}" /></td>
+    </tr>
+    <tr>
+      <th>Ceny Akceptowalne</th>
+      <td><input type="number" step="0.01" name="acceptedPrice" th:value="${client.acceptedPrice}" /></td>
+    </tr>
+    <tr>
+      <th>Ceny Oferowane</th>
+      <td><input type="number" step="0.01" name="offeredPrice" th:value="${client.offeredPrice}" /></td>
+    </tr>
+    <tr>
+      <th>Kontakt</th>
+      <td><input type="text" name="contact" th:value="${client.contact}" /></td>
+    </tr>
+    <tr>
+      <th>Info</th>
+      <td>
+        <textarea name="info" th:text="${client.info}"></textarea>
+      </td>
+    </tr>
+  </table>
+  <div class="form-container">
+    <input type="submit" value="Zapisz Zmiany" />
+    <a th:href="@{/clients}" class="button">Powrót do listy klientów</a>
+  </div>
+</form>

@@ -2,6 +2,7 @@ package Kaer.com.clientTools;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +35,9 @@ public class ClientController {
     }
 
     @PostMapping("/new")
-    public String createClient(Client client) {
+    public String createClient(@ModelAttribute Client client) {
         clientService.saveClient(client);
-        log.info("Klient " + client + " został dodany");
+        log.info("Klient {} został dodany", client); // lepsze logowanie
         return "redirect:/clients";
     }
 
@@ -45,24 +46,15 @@ public class ClientController {
         Optional<Client> existingClient = clientService.getClientById(client.getId());
         if (existingClient.isPresent()) {
             Client updatedClient = existingClient.get();
-            // Aktualizacja wszystkich pól
-            updatedClient.setName(client.getName());
-            updatedClient.setCountry(client.getCountry());
-            updatedClient.setGoodsHeBuy(client.getGoodsHeBuy());
-            updatedClient.setGoodsHeSell(client.getGoodsHeSell());
-            updatedClient.setCreditLimit(client.getCreditLimit());
-            updatedClient.setAcceptedPrice(client.getAcceptedPrice());
-            updatedClient.setOfferedPrice(client.getOfferedPrice());
-            updatedClient.setContact(client.getContact());
-            updatedClient.setInfo(client.getInfo());
+            // Aktualizacja klienta
+            updatedClient.updateFrom(client); // Zakładając, że masz metodę updateFrom w klasie Client
             clientService.saveClient(updatedClient);
-            log.info("Zaktualizowano klienta: {}", updatedClient);
+            log.info("Zaktualizowano klienta: {}", updatedClient); // lepsze logowanie
         } else {
             log.error("Klient o ID {} nie istnieje", client.getId());
         }
         return "redirect:/clients/" + client.getId();
     }
-
 
     @GetMapping("/clients")
     public String listClients(Model model) {
@@ -78,8 +70,20 @@ public class ClientController {
             model.addAttribute("client", optionalClient.get());
             return "clientDetails";
         } else {
-            log.error("Client with id {} not found", id);
+            log.error("Klient z id {} nie został znaleziony", id);
             return "redirect:/clients";
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/user/home")
+    public String userHome() {
+        return "userHome";
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/home")
+    public String adminHome() {
+        return "adminHome";
     }
 }

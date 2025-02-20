@@ -21,6 +21,12 @@ public class ClientService {
     public Client findById(Long id) {
         return clientRepository.findById(id).orElse(null);
     }
+    /**
+     * Saves a client to the database.
+     *
+     * @param client the client to save
+     * @return the saved client
+     */
     public Client saveClient(@RequestBody Client client) {
         return clientRepository.save(client);
     }
@@ -29,7 +35,13 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-    // Zmieniona metoda, która zwraca Optional<Client>
+    /**
+     * Retrieves a client by their ID.
+     *
+     * @param id the ID of the client to retrieve
+     * @return an Optional containing the client if found, otherwise empty
+     */
+    // Method to get a client by ID
     public Optional<Client> getClientById(Long id) {
         return clientRepository.findById(id);
     }

@@ -29,8 +29,21 @@ public class Client {
     private String goodsHeBuy;
     private String goodsHeSell;
     private double creditLimit;
-    private double acceptedPrice;
-    private double offeredPrice;
+//    private double acceptedPrice;
+//    private double offeredPrice;
     private String contact;
     private String info;
+
+    public void updateFrom(Client other) {
+        this.name = other.getName();
+        this.country = other.getCountry();
+        this.goodsHeBuy = other.getGoodsHeBuy();
+        this.goodsHeSell = other.getGoodsHeSell();
+        this.creditLimit = other.getCreditLimit();
+//        this.acceptedPrice = other.getAcceptedPrice();
+//        this.offeredPrice = other.getOfferedPrice();
+        this.contact = other.getContact();
+        this.info = other.getInfo();
+    }
 }
+
